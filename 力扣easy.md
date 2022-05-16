@@ -143,7 +143,7 @@ let widthTraversal2 = (node) => {
 
 
 
-### 94.二叉树的中序遍历
+#### [94. 二叉树的中序遍历](https://leetcode.cn/problems/binary-tree-inorder-traversal/)
 
 ``` js
 /**
@@ -194,6 +194,74 @@ var inorderTraversal = function (root) {
   const res = [];
   dfs(res, root);
   return res;
+};
+```
+
+
+
+### [101. 对称二叉树](https://leetcode.cn/problems/symmetric-tree/)
+
+``` js
+解法一：递归。树为左右对称，则这棵树的左右子树必须值相等，再去判断左右子树的左右子树也要对称。
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val) {
+ *     this.val = val;
+ *     this.left = this.right = null;
+ * }
+ */
+/**
+ * @param {TreeNode} root
+ * @return {boolean}
+ */
+//这个函数就是判断某个树是否左右对称
+function isSame(l, r) {
+  //都为空则符合
+  if (!l && !r) return true;
+  //否则如果是只有一个为空，肯定不符合
+  if (!l || !r) return false;
+
+  //这棵树的左右子树必须值相等，再去判断左右子树的左右子树
+  if (l.val === r.val && isSame(l.left, r.right) && isSame(l.right, r.left)) {
+    return true;
+  }
+  //否则不符合，这句一定得加上
+  return false;
+}
+var isSymmetric = function(root) {
+  if (!root) return true;
+  return isSame(root.left, root.right);
+};
+
+
+解法二：BFS迭代。入 queue 的顺序：
+左子树的左子树，右子树的右子树
+左子树的右子树，右子树的左子树。
+出 queue 的时候，检查两两是否对称。
+var isSymmetric = function(root) {
+    if(root==null)return true;
+    const queue=[];
+    queue.push(root.left,root.right);
+    while(queue.length){
+        const len=queue.length;
+        for(let i=0;i<len;i+=2){
+            const left=queue.shift();
+            const right=queue.shift();
+            
+            if(left&&right){
+                if(left.val!=right.val)return false;
+                queue.push(left.left,right.right);
+                queue.push(left.right,right.left);
+            }
+            if (!left && !right) {
+                continue
+            }
+            if(!left || !right){
+                return false;
+            }      
+        }
+    }
+    return true;
 };
 ```
 
