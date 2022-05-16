@@ -33,6 +33,7 @@ const tree = {
 }
 
 /*深度优先遍历三种方式*/
+// 先序，根左右
 let deepTraversal1 = (node, nodeList = []) => {
   if (node !== null) {
     nodeList.push(node)
