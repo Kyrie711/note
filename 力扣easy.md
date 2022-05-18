@@ -267,8 +267,131 @@ var isSymmetric = function(root) {
 
 
 
+
+
+### [104. 二叉树的最大深度](https://leetcode.cn/problems/maximum-depth-of-binary-tree/)
+
+
+
+``` js
+解法一：递归分治。
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val, left, right) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.left = (left===undefined ? null : left)
+ *     this.right = (right===undefined ? null : right)
+ * }
+ */
+/**
+ * @param {TreeNode} root
+ * @return {number}
+ */
+//分治
+var maxDepth = function(root) {
+    if(!root) {
+        return 0;
+    }
+    let leftDepth = maxDepth(root.left);
+    let rightDepth = maxDepth(root.right);
+    return Math.max(leftDepth, rightDepth) + 1;
+};
+
+解法二：层序遍历BFS队列。
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val) {
+ *     this.val = val;
+ *     this.left = this.right = null;
+ * }
+ */
+/**
+ * @param {TreeNode} root
+ * @return {number}
+ */
+
+var maxDepth = function (root) {
+  if (!root) return 0;
+  let maxRes = 0;
+  const queue = [];
+  queue.push(root);
+  while (queue.length) {
+    const length = queue.length;
+    maxRes++;
+    for (let i = 0; i < length; i++) {
+      const node = queue.shift();
+      node.left && queue.push(node.left);
+      node.right && queue.push(node.right);
+    }
+  }
+  return maxRes;
+};
+```
+
+
+
+
+
+### [226. 翻转二叉树](https://leetcode.cn/problems/invert-binary-tree/)
+
+``` js
+解法一：从根部翻转，再到内部递归翻转。
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val) {
+ *     this.val = val;
+ *     this.left = this.right = null;
+ * }
+ */
+/**
+ * @param {TreeNode} root
+ * @return {TreeNode}
+ */
+var invertTree = function (root) {
+  if (!root) return root;
+
+  [root.left, root.right] = [root.right, root.left];
+   // 内部的翻转交给递归去做
+  invertTree(root.left);
+  invertTree(root.right);
+  return root
+};
+
+解法二：BFS层序遍历。根节点先入列，然后出列，出列就 “做事”，交换它的左右子节点（左右子树）。
+并且让左右子节点（左右子树）入列，往后，这些子节点（子树）会出列，也被翻转。
+直到队列为空，就遍历完所有的节点（子树），翻转了所有子树，即翻转了整个二叉树。
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val) {
+ *     this.val = val;
+ *     this.left = this.right = null;
+ * }
+ */
+/**
+ * @param {TreeNode} root
+ * @return {TreeNode}
+ */
+var invertTree = function (root) {
+  if (!root) return root;
+
+  const queue = [];
+  queue.push(root);
+  while (queue.length) {
+    const node = queue.shift();
+    [node.left, node.right] = [node.right, node.left];
+    node.left && queue.push(node.left);
+    node.right && queue.push(node.right);
+  }
+  return root
+};
+```
+
+
+
 # 思想
 
 ## 递归
 
 每个都是一样的，思考一层就可以了
+
+if(!root) 是后来的叶子节点用的
