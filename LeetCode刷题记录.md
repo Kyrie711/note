@@ -5954,7 +5954,6 @@ var convert = function(s, numRows) {
 
 输入: "{[]}"
 输出: true
-
 ```
 
 ```javascript
@@ -8351,7 +8350,7 @@ var maximalSquare = function (matrix) {
 
 ![image-20201106164103482](C:\Users\缘分tbb&hf\AppData\Roaming\Typora\typora-user-images\image-20201106164103482.png)
 
-#### 53. 最大子序和（重做：1）
+#### 53. 最大子数组和（重做：1）
 
 给定一个整数数组 nums ，找到一个具有最大和的连续子数组（子数组最少包含一个元素），返回其最大和。
 
