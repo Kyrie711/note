@@ -1031,6 +1031,7 @@ var moveZeroes = function (nums) {
 ```
 
 ```javascript
+思考一下z
 解法一：维持一个最小价格minNum，循环prices数组，有小于minNum的值则替换，否则更新计算最大利润。
 /**
  * @param {number[]} prices
@@ -1046,7 +1047,7 @@ var maxProfit = function (prices) {
   return res;
 };
 
-解法二：动态规划。时间复杂度高，为O(n^2),没有上面方法仅保持一个最小值快。
+解法二：动态规划。时间复杂度高，为O(n^2),没有上面方法仅保持一个最小值快。 c
 
 状态：第j天买，第i天卖,遍历最大值
 
@@ -1062,7 +1063,7 @@ var maxProfit = function (prices) {
  */
 
 // 当前到队首
-// 不要从当前到末尾
+// 不要从当前到末尾 // 超时
 var maxProfit = function (prices) {
     const n = prices.length;
     if (n == 0) {

@@ -1,5 +1,9 @@
 # 数据结构
 
+## 常用
+
+1.   ...拓展符
+
 ## 树
 
 
@@ -649,7 +653,7 @@ var mergeTrees = function (t1, t2) {
 
 将两个升序链表合并为一个新的 **升序** 链表并返回。新链表是通过拼接给定的两个链表的所有节点组成的。
 
-![](D:\A-前端学习\图片\题目\21.jpg)
+![](D:\A-front-end\图片\题目\21.jpg)
 
 ``` js
 解法一：
@@ -764,7 +768,7 @@ var mergeTwoLists = function(list1, list2) {
 
 给你一个链表的头节点 `head` ，判断链表中是否有环。
 
-![](D:\A-前端学习\图片\题目\141.png)
+![](D:\A-front-end\图片\题目\141.png)
 
 ``` js
 解法一：给每个未访问的节点增加一个isVisited属性，访问过的即存在这个属性为true，如果下一个节点有这个属性，代表是个环
@@ -851,7 +855,7 @@ var hasCycle = function(head) {
 
 图示两个链表在节点 c1 开始相交：
 
-![](D:\A-前端学习\图片\题目\160.png)
+![](D:\A-front-end\图片\题目\160.png)
 
 ``` js
 解法一：和环形列表类似。在A链表上每个节点加一个isVisited属性，之后遍历B链表的时候判断其是否有这个属性标识，有则代表是相交节点。
@@ -910,7 +914,7 @@ var getIntersectionNode = function (headA, headB) {
 
 ### [206. 反转链表](https://leetcode.cn/problems/reverse-linked-list/)
 
-![](D:\A-前端学习\图片\题目\206.jpg)
+![](D:\A-front-end\图片\题目\206.jpg)
 
 ``` js
 解法一:双指针滑动迭代。
@@ -963,7 +967,7 @@ var reverseList = function (head) {
 
 ### [234. 回文链表](https://leetcode.cn/problems/palindrome-linked-list/)
 
-![](D:\A-前端学习\图片\题目\234.jpg)
+![](D:\A-front-end\图片\题目\234.jpg)
 
 给你一个单链表的头节点 `head` ，请你判断该链表是否为回文链表。如果是，返回 `true` ；否则，返回 `false` 。
 
@@ -1238,6 +1242,438 @@ var maxSubArray = function(nums) {
 
 
 
+### [70. 爬楼梯](https://leetcode.cn/problems/climbing-stairs/)
+
+假设你正在爬楼梯。需要 `n` 阶你才能到达楼顶。
+
+每次你可以爬 `1` 或 `2` 个台阶。你有多少种不同的方法可以爬到楼顶呢？
+
+``` mathematica
+输入：n = 2
+输出：2
+解释：有两种方法可以爬到楼顶。
+1. 1 阶 + 1 阶
+2. 2 阶
+
+输入：n = 3
+输出：3
+解释：有三种方法可以爬到楼顶。
+1. 1 阶 + 1 阶 + 1 阶
+2. 1 阶 + 2 阶
+3. 2 阶 + 1 阶
+```
+
+``` js
+解法一：动态规划。实际就是斐波拉契数列。
+
+如果第一次只跳一级，则后面剩下的n-1级台阶的跳法数目为f(n-1)；如果第一次跳两级，则后面剩下的n-2级台阶的跳法数目为f(n-2)。所以，得出递归方程，f(n) = f(n-1) + f(n-2)。问题本质是斐波那契数列。
+
+状态：dp[i]为爬到i级楼梯时最多有多少种方法，那么dp[i-1]和dp[i-2]同样代表爬到i-1和i-2级楼梯时最多有多少种方法.
+
+转移方程：dp[i] = dp[i - 1] + dp[i - 2];爬到i级楼梯的方法等于前两个楼梯爬上来之和
+
+初始条件：    dp[0] = 1; //这个初始条件也需要举个dp[2]的例子可以验证下，或者认为（爬0层台阶有一种方法，不爬就是楼顶）dp[1] = 1;//爬到第一层时只有一种方法上来
+
+/**
+ * @param {number} n
+ * @return {number}
+ */
+var climbStairs = function (n) {
+    const dp = [];
+    dp[0] = 1; //这个初始条件也需要举个dp[2]的例子可以验证下，或者认为（爬0层台阶有一种方法，不爬就是楼顶）
+    dp[1] = 1;
+    for (let i = 2; i <= n; i++) {
+        dp[i] = dp[i - 1] + dp[i - 2];
+    }
+    return dp[n];
+};
+
+
+
+//滚动数组：
+/**
+ * @param {number} n
+ * @return {number}
+ */
+var climbStairs = function (n) {
+    let old = 1;//old 替换dp[0]
+    let now = 1;//now 替换dp[1]
+    for (let i = 2; i <= n; i++) {
+        if (i >= 2) {
+            let t = now + old;
+            old = now;
+            now = t;
+        }
+    }
+    return now;
+};
+```
+
+
+
+
+
+### [121. 买卖股票的最佳时机](https://leetcode.cn/problems/best-time-to-buy-and-sell-stock/)
+
+给定一个数组 prices ，它的第 i 个元素 prices[i] 表示一支给定股票第 i 天的价格。
+
+你只能选择 某一天 买入这只股票，并选择在 未来的某一个不同的日子 卖出该股票。设计一个算法来计算你所能获取的最大利润。
+
+返回你可以从这笔交易中获取的最大利润。如果你不能获取任何利润，返回 0 。
+
+``` mathematica
+输入：[7,1,5,3,6,4]
+输出：5
+解释：在第 2 天（股票价格 = 1）的时候买入，在第 5 天（股票价格 = 6）的时候卖出，最大利润 = 6-1 = 5 。
+     注意利润不能是 7-1 = 6, 因为卖出价格需要大于买入价格；同时，你不能在买入前卖出股票。
+
+输入：prices = [7,6,4,3,1]
+输出：0
+解释：在这种情况下, 没有交易完成, 所以最大利润为 0。
+```
+
+``` js
+思考一下折线图 
+解法一：维持一个最小价格minNum，循环prices数组，有小于minNum的值则替换，否则更新计算最大利润。
+/**
+ * @param {number[]} prices
+ * @return {number}
+ */
+var maxProfit = function (prices) {
+  let minNum = prices[0];
+  let res = 0;
+  for (let i = 1; i < prices.length; i++) {
+      minNum = Math.min(minNum,prices[i]);
+      res = Math.max(res,prices[i] - minNum);
+  }
+  return res;
+};
+
+解法二：动态规划。时间复杂度高，为O(n^2),没有上面方法仅保持一个最小值快。 c
+
+状态：第j天买，第i天卖,遍历最大值
+
+转移方程：dp[i] = Math.max(dp[i], prices[i] - prices[j]); （prices[i] > prices[j]）
+
+初始条件：无
+
+结果Math.max(dp[0]，dp[1],....dp[n-1]);
+
+/**
+ * @param {number[]} prices
+ * @return {number}
+ */
+
+// 当前到队首
+// 不要从当前到末尾 // 超时
+var maxProfit = function (prices) {
+    const n = prices.length;
+    if (n == 0) {
+        return 0;
+    }
+
+    const dp = [];
+    for (let i = 0; i < n; i++) {
+        dp[i] = 0;
+        for (let j = 0; j <=i; j++) {
+            if (prices[i] > prices[j]) {
+                dp[i] = Math.max(dp[i], prices[i] - prices[j]);
+            }
+        }
+    }
+    return Math.max(...dp)
+};
+```
+
+
+
+
+
+### [136. 只出现一次的数字](https://leetcode.cn/problems/single-number/)
+
+给定一个**非空**整数数组，除了某个元素只出现一次以外，其余每个元素均出现两次。找出那个只出现了一次的元素。
+
+``` mathematica
+输入: [2,2,1]
+输出: 1
+
+输入: [4,1,2,1,2]
+输出: 4
+```
+
+``` js
+解法一：哈希，因为题目说了其余的均只出现两次，可以用对象先存着每个，再碰到的时候是相同的话直接删掉，则最后只剩下那出现一次的值了。
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var singleNumber = function(nums) {
+  let numsObj = {};
+  for (let i = 0; i < nums.length; i++) {
+    if (numsObj[nums[i]]) delete numsObj[nums[i]];
+    else numsObj[nums[i]] = 1;
+  }
+  return Object.keys(numsObj)[0];
+};
+
+解法二：异或，这个方法一般想不到，对位运算的规律比较熟练才行。主要因为异或运算有以下几个特点：
+一个数和 0 做 XOR 运算等于本身：a⊕0 = a
+一个数和其本身做 XOR 运算等于 0：a⊕a = 0
+XOR 运算满足交换律和结合律：a⊕b⊕a = (a⊕a)⊕b = 0⊕b = b
+
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var singleNumber = function(nums) {
+    let ans = 0;
+    for(const num of nums) {
+        ans ^= num;
+    }
+    return ans;
+};
+
+或者
+var singleNumber = function(nums) {
+    return nums.reduce((a,b)=> a^b)
+};
+
+解法三：哈希,map
+
+var singleNumber = function(nums) {
+    let map = new Map()
+    for(let i = 0; i < nums.length; i++) {
+        if(map.has(nums[i])){
+            map.delete(nums[i])
+        } else {
+            map.set(nums[i], 1)
+        }
+    }
+    return [...map.keys()][0]
+};
+```
+
+
+
+
+
+### [169. 多数元素](https://leetcode.cn/problems/majority-element/)
+
+给定一个大小为 n 的数组 nums ，返回其中的多数元素。多数元素是指在数组中出现次数 大于 ⌊ n/2 ⌋ 的元素。
+
+你可以假设数组是非空的，并且给定的数组总是存在多数元素。
+
+``` mathematica
+输入：nums = [3,2,3]
+输出：3
+
+输入：nums = [2,2,1,1,1,2,2]
+输出：2
+```
+
+``` js
+解法一：投票算法。
+相同的加1, 不相同的减1, 因为是大于一半, 所以最后肯定剩下大于一半的那个
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var majorityElement = function (nums) {
+    let candidate = 0
+    let count = 0
+    for (let num of nums) {
+        if (count === 0) candidate = num;
+        count += (num === candidate ? 1 : -1)
+    }
+    return candidate
+};
+
+解法二：哈希表，用对象实现。
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var majorityElement = function (nums) {
+  const obj = {};
+  for (let i = 0; i < nums.length; i++) {
+    if (obj[nums[i]] != void 0) {
+      obj[nums[i]] += 1;
+    } else {
+      obj[nums[i]] = 0;
+    }
+  }
+  let max = -1;
+  let maxIndex ;
+  for (let i of Object.keys(obj)) {
+    if (max < obj[i]) {
+      max = obj[i];
+      maxIndex = i;
+    }
+  }
+  return maxIndex;
+};
+
+2)map 实现
+var majorityElement = function(nums) {
+    let map = new Map()
+    for(let i = 0; i < nums.length; i++) {
+        if(map.has(nums[i])) {
+            map.set(nums[i], map.get(nums[i]) + 1)
+        } else {
+            map.set(nums[i], 1)
+        }
+    }
+    for(let key of map.keys()) {
+        if(map.get(key) > nums.length / 2) return key
+    }
+};
+
+解法三：排序。如果将数组 nums 中的所有元素按照单调递增或单调递减的顺序排序，那么下标为floor后n/2的元素（下标从 0 开始）一定是众数。时间复杂度变高
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var majorityElement = function (nums) {
+  nums.sort((v1,v2)=>v1-v2);
+  return nums[Math.floor(nums.length / 2)];
+};
+```
+
+
+
+
+
+### [283. 移动零](https://leetcode.cn/problems/move-zeroes/)
+
+给定一个数组 `nums`，编写一个函数将所有 `0` 移动到数组的末尾，同时保持非零元素的相对顺序。
+
+**请注意** ，必须在不复制数组的情况下原地对数组进行操作。
+
+``` js
+解法一：双指针
+/**
+ * @param {number[]} nums
+ * @return {void} Do not return anything, modify nums in-place instead.
+ */
+var moveZeroes = function (nums) {
+  let index = 0;
+  //这个循环将数组里面全部去掉0了。
+  for (let i = 0; i < nums.length; i++) {
+    if (nums[i]!= 0) {
+      nums[index++] = nums[i];
+    }
+  }
+  for (let i = index; i < nums.length; i++){
+    nums[i] = 0;
+  }
+  return nums;
+};
+
+解法二：双指针交换。
+/** 
+ * @param {number[]} nums
+ * @return {void} Do not return anything, modify nums in-place instead.
+ */
+var moveZeroes = function(nums) {
+    const len = nums.length;
+    let lastNonZeroFound = 0;
+
+    for(let i = 0; i < len; ++i) {
+        if(nums[i]) { // 自己交换自己
+            [nums[i], nums[lastNonZeroFound++]] = [nums[lastNonZeroFound], nums[i]]
+        }
+    }
+
+};
+
+
+var moveZeroes = function(nums) {
+    let zpos = 0
+    for(let i = 0; i < nums.length; i++) {
+        if(nums[i] != 0 && nums[zpos] === 0) {
+            [nums[i], nums[zpos]] = [nums[zpos], nums[i]]
+            zpos++
+        } else if(nums[i] === 0){
+            continue
+        } else {
+            zpos++
+        }
+    }
+};
+
+解法三：直接用数组的splice和push方法，不过时间复杂度会变大。这里还得注意splice处理后，下标就不要右移了，i保持不变在下一轮。
+/**
+ * @param {number[]} nums
+ * @return {void} Do not return anything, modify nums in-place instead.
+ */
+var moveZeroes = function (nums) {
+  let length = nums.length;
+  for (let i = 0; i < length; i++){
+    if (nums[i] === 0) {
+      nums.splice(i, 1);
+      nums.push(0);
+      length--; //不需要再遍历到最后了
+      i--;//有splice的操作，i这里不要再++到下一个下标去
+    }
+  }
+  return nums;
+};
+
+解法四：冒泡排序，很慢
+var moveZeroes = function(nums) {
+    for (let i = 0; i < nums.length; i++) {
+        for (let j = 0; j < nums.length - i - 1; j++) {
+            if (nums[j] === 0) {
+                [nums[j], nums[j + 1]] = [nums[j + 1], nums[j]]
+            }
+        }
+    }
+    return nums
+};
+```
+
+
+
+
+
+### [448. 找到所有数组中消失的数字](https://leetcode.cn/problems/find-all-numbers-disappeared-in-an-array/)
+
+给你一个含 n 个整数的数组 nums ，其中 nums[i] 在区间 [1, n] 内。请你找出所有在 [1, n] 范围内但没有出现在 nums 中的数字，并以数组的形式返回结果。
+
+``` mathematica
+输入：nums = [4,3,2,7,8,2,3,1]
+输出：[5,6]
+
+输入：nums = [1,1]
+输出：[2]
+```
+
+``` js
+解法一：在本身数组上面存信息。根据已有的值，去标记对应 index 值为负数
+/**
+ * @param {number[]} nums
+ * @return {number[]}
+ */
+var findDisappearedNumbers = function(nums) {
+    // 根据已有的值，去标记对应 index 值为负数
+    nums.forEach((num) => {
+        const absNum = Math.abs(num)
+        nums[absNum - 1] = -(Math.abs(nums[absNum - 1]));
+    })
+    //nums这时候为[-4, -3, -2, -7, 8,  2, -3, -1]，说明index为4,5的没有对应的值指向，即，5,6不存在
+
+    // 查找哪些值不为负数，即没有数指向这个 index
+    return nums.reduce((pre, num, index) => {
+        num > 0 && pre.push(index + 1);
+        return pre
+    }, [])
+};
+```
+
+
+
+
+
 ## 字符串
 
 
@@ -1339,3 +1775,8 @@ var isValid = function(s) {
 if(!root) 是后来的叶子节点用的
 
 最重要的是return什么 
+
+
+
+## 动态规划
+
